@@ -8,12 +8,13 @@ import (
 func TestPow(t *testing.T) {
 	p := New()
 	p.Nonce = 0
+	_, _, difficulty := config.GetConfig()
 
 	nonce := p.Nonce
 	p.Update()
 	t.Run("Pow updated", func(t *testing.T) {
 		if nonce == p.Nonce {
-			t.Errorf("Pow wasn't updated: result = 0, want = random [%d-%d)", config.DIFFICULTY/2, config.DIFFICULTY)
+			t.Errorf("Pow wasn't updated: result = 0, want = random [%d-%d)", difficulty/2, difficulty)
 		}
 	})
 

@@ -14,12 +14,15 @@ type Pow struct {
 	Hash  string
 }
 
+var difficulty int
+
 func init() {
 	rand.Seed(time.Now().Unix())
+	_, _, difficulty = config.GetConfig()
 }
 
 func New() Pow {
-	nonce := rand.Intn(config.DIFFICULTY/2) + config.DIFFICULTY/2
+	nonce := rand.Intn(difficulty/2) + difficulty/2
 
 	secret := sha1.New()
 	secret.Write([]byte(fmt.Sprintf("%d", nonce)))
@@ -31,7 +34,7 @@ func New() Pow {
 }
 
 func (p *Pow) Update() {
-	nonce := rand.Intn(config.DIFFICULTY/2) + config.DIFFICULTY/2
+	nonce := rand.Intn(difficulty/2) + difficulty/2
 
 	secret := sha1.New()
 	secret.Write([]byte(fmt.Sprintf("%d", nonce)))
@@ -42,7 +45,7 @@ func (p *Pow) Update() {
 }
 
 func (p *Pow) Solve() error {
-	for i := 0; i < config.DIFFICULTY; i++ {
+	for i := 0; i < difficulty; i++ {
 		secret := sha1.New()
 		secret.Write([]byte(fmt.Sprintf("%d", i)))
 		hash := fmt.Sprintf("%x", secret.Sum(nil))

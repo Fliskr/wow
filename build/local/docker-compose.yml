@@ -1,0 +1,29 @@
+version: '3.7'
+
+services:
+  server:
+    build:
+      context: ../..
+      dockerfile: ./build/local/docker/server.Dockerfile
+    container_name: wow-server
+    ports:
+      - "10000:10000/tcp"
+    environment:
+      PORT: "10000"
+      HOST: "0.0.0.0"
+      DIFFICULTY: 200000
+    expose:
+      - "10000"
+
+
+  client:
+    build:
+      context: ../..
+      dockerfile: ./build/local/docker/client.Dockerfile
+    container_name: wow-client
+    network_mode: host
+    environment:
+      PORT: 10000
+      DIFFICULTY: 200000
+    depends_on:
+      - server

@@ -15,9 +15,14 @@ import (
 	"wow/res/store/wowstore"
 )
 
-func main() {
+var difficulty int
 
-	listen, err := net.Listen(config.TYPE, config.HOST+":"+config.PORT)
+func main() {
+	host, port, diff := config.GetConfig()
+	difficulty = diff
+
+	fmt.Printf("Listening on: %s:%s. \n Difficulty is: %d", host, port, difficulty)
+	listen, err := net.Listen(config.TYPE, host+":"+port)
 	if err != nil {
 		log.Fatal(err)
 		os.Exit(1)
@@ -40,7 +45,7 @@ func handleIncomingRequest(conn net.Conn, s store.Store) {
 	defer conn.Close()
 
 	reader := bufio.NewReader(conn)
-	nonce := rand.Intn(config.DIFFICULTY/2) + config.DIFFICULTY/2
+	nonce := rand.Intn(difficulty/2) + difficulty/2
 
 	hashedSecret := sha1.New()
 	hashedSecret.Write([]byte(fmt.Sprintf("%d", nonce)))

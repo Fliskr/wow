@@ -7,6 +7,7 @@ import (
 	"net"
 	"time"
 
+	"wow/config"
 	"wow/lib/message"
 	"wow/lib/pow"
 )
@@ -22,7 +23,8 @@ func connect() {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
-	conn, err := d.DialContext(ctx, "tcp", "localhost:9001")
+	host, port, _ := config.GetConfig()
+	conn, err := d.DialContext(ctx, config.TYPE, host+":"+port)
 	if err != nil {
 		log.Fatalf("Failed to dial: %v", err)
 	}
